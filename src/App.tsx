@@ -4,7 +4,7 @@ import Hero from './components/custom/Hero'
 
 function App() {
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full h-screen bg-white">
       <Header />
       <Hero />
     </div>

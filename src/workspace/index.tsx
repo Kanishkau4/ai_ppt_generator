@@ -9,13 +9,13 @@ import PromptBox from "../components/custom/PromptBox";
 import MyProjects from "../components/custom/MyProjects";
 
 function Workspace() {
-    const { isSignedIn, user } = useUser();
+    const { isLoaded, isSignedIn, user } = useUser();
     const { userDetail, setUserDetail } = useContext(UserDetailContext);
     const location = useLocation();
 
     useEffect(() => {
         createNewUser();
-    }, [user]);
+    }, [user, isLoaded]);
 
     const createNewUser = async () => {
         if (user && user.primaryEmailAddress?.emailAddress) {
@@ -43,6 +43,10 @@ function Workspace() {
             }
         }
     };
+
+    if (!isLoaded) {
+        return null;
+    }
 
     if (!isSignedIn) {
         return <Navigate to="/" />;
