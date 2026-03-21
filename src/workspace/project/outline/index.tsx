@@ -73,16 +73,18 @@ const DUMMY_OUTLINE = [
 
 ]
 
-type ProjectDetails = {
+export type ProjectDetails = {
     projectId: string;
     prompt: string;
     noOfSlides: string;
     createdBy: string;
     createdAt: number;
     outline: Outline[];
+    slides: any[];
+    designStyle: designStyle;
 }
 
-type Outline = {
+export type Outline = {
     slideNo: string;
     slidePoint: string;
     outline: string;
@@ -150,11 +152,14 @@ function Outline() {
         //update outline in firestore
         await setDoc(doc(firestoreDB, "projects", projectId ?? ""), {
             outline: outline,
-            themeName: selectedStyle?.styleName
+            designStyle: selectedStyle
         }, {
             merge: true
         });
         setUpdateDbLoading(false);
+
+        //navigate to slide generation page
+        // navigate(`/project/${projectId}/editor`);
     }
     return (
         <div>
