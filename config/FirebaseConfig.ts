@@ -32,7 +32,7 @@ export const GeminiModel = getGenerativeModel(ai, { model: "gemini-2.5-flash" })
 
 // Create a `LiveGenerativeModel` instance with a model that supports the Live API
 export const GeminiLiveModel = getLiveGenerativeModel(ai, {
-    model: "gemini-2.5-flash-live-preview-09-2025",
+    model: "gemini-2.5-flash-live-001",
     // Configure the model to respond with text
     generationConfig: {
         responseModalities: [ResponseModality.TEXT],

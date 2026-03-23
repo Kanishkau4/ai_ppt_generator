@@ -1,10 +1,10 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firestoreDB, GeminiModel } from "../../../../config/FirebaseConfig";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import SlidesStyles from "../../../components/custom/SlidesStyles";
 import OutlineSection from "../../../components/custom/OutlineSection";
+import { UserDetailContext } from "../../../../context/UserDetailContext";
 import { Button } from "../../../components/ui/button";
 import { Loader2, Sparkle } from "lucide-react";
 
@@ -95,7 +95,8 @@ export type Outline = {
 
 function Outline() {
     const { projectId } = useParams();
-    const [projectDetails, setProjectDetails] = useState<ProjectDetails | null>();
+    const navigate = useNavigate();
+    const { userDetail, setUserDetail } = useContext(UserDetailContext);
     const [loading, setLoading] = useState(false);
     const [updateDbLoading, setUpdateDbLoading] = useState(false);
     const [outline, setOutline] = useState<Outline[]>(DUMMY_OUTLINE);
@@ -114,7 +115,6 @@ function Outline() {
             console.log("No such document!");
         }
         console.log(docSnap.data());
-        setProjectDetails(docSnap.data());
         if (!docSnap.data().outline) {
             generateOutline(docSnap.data());
         }
@@ -156,11 +156,23 @@ function Outline() {
         }, {
             merge: true
         });
+
+        // Deduct 1 credit
+        if (userDetail && userDetail.credits > 0) {
+            const updatedCredits = userDetail.credits - 1;
+            const userRef = doc(firestoreDB, "users", userDetail.email);
+            // Save to Firebase
+            await setDoc(userRef, { credits: updatedCredits }, { merge: true });
+            // Update Context to reflect locally on Header
+            setUserDetail({ ...userDetail, credits: updatedCredits });
+        }
+
         setUpdateDbLoading(false);
 
         //navigate to slide generation page
-        // navigate(`/project/${projectId}/editor`);
+        navigate(`/workspace/project/${projectId}/editor`);
     }
+
     return (
         <div>
             <div className="flex flex-col items-center justify-center w-full px-6 py-3 bg-white mt-28 space-y-4 ">
