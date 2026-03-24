@@ -134,7 +134,7 @@ function Editor() {
 
         const generated: { code: string }[] = [];
 
-        for (let index = 0; index < projectDetails.outline.length && index < 5; index++) {
+        for (let index = 0; index < (projectDetails?.outline?.length ?? 0); index++) {
             const metaData = projectDetails.outline[index];
             const prompt = SLIDE_PROMPT
                 .replace("{DESIGN_STYLE}", projectDetails?.designStyle?.designGuide ?? "")

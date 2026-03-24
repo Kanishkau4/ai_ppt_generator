@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 function PromptBox() {
 
     const [prompt, setPrompt] = useState<string>("");
-    const [noOfSlides, setNoOfSlides] = useState<string>("6-8");
+    const [noOfSlides, setNoOfSlides] = useState<string>("4-6");
     const { user } = useUser();
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -58,9 +58,9 @@ function PromptBox() {
                         <SelectContent className="w-[180px]">
                             <SelectGroup>
                                 <SelectLabel>No of Slides</SelectLabel>
-                                <SelectItem value="6-8">6-8 Slides</SelectItem>
-                                <SelectItem value="9-12">9-12 Slides</SelectItem>
-                                <SelectItem value="13-16">13-16 Slides</SelectItem>
+                                <SelectItem value="4-6">4-6 Slides</SelectItem>
+                                <SelectItem value="7-9">7-9 Slides</SelectItem>
+                                <SelectItem value="10-12">10-12 Slides</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -68,7 +68,7 @@ function PromptBox() {
                         onClick={() => {
                             CreateAndSaveProject()
                         }}
-                        disabled={!prompt && !noOfSlides}
+                        disabled={!prompt}
                     >
                         {loading ? <Loader2Icon className="animate-spin" /> : <ArrowRight />}
                     </InputGroupButton>

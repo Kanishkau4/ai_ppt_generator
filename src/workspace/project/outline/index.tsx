@@ -7,6 +7,8 @@ import OutlineSection from "../../../components/custom/OutlineSection";
 import { UserDetailContext } from "../../../../context/UserDetailContext";
 import { Button } from "../../../components/ui/button";
 import { Loader2, Sparkle } from "lucide-react";
+import CreditLimitDialog from "@/components/custom/CreditLimitDialog";
+import { useAuth } from "@clerk/react";
 
 type designStyle = {
     styleName: string;
@@ -101,6 +103,11 @@ function Outline() {
     const [updateDbLoading, setUpdateDbLoading] = useState(false);
     const [outline, setOutline] = useState<Outline[]>(DUMMY_OUTLINE);
     const [selectedStyle, setSelectedStyle] = useState<designStyle>();
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
+    const { has } = useAuth();
+    const hasActiveSubscription = has({
+        permission: "subscription.active",
+    });
 
     useEffect(() => {
         getProjectDetails();
@@ -158,13 +165,16 @@ function Outline() {
         });
 
         // Deduct 1 credit
-        if (userDetail && userDetail.credits > 0) {
+        if (userDetail && userDetail.credits > 0 && !hasActiveSubscription) {
             const updatedCredits = userDetail.credits - 1;
             const userRef = doc(firestoreDB, "users", userDetail.email);
             // Save to Firebase
             await setDoc(userRef, { credits: updatedCredits }, { merge: true });
             // Update Context to reflect locally on Header
-            setUserDetail({ ...userDetail, credits: updatedCredits });
+            hasActiveSubscription && setUserDetail((prev: any) => ({ ...prev, credits: updatedCredits }));
+        }
+        else {
+            setOpenAlertDialog(true);
         }
 
         setUpdateDbLoading(false);
@@ -191,6 +201,7 @@ function Outline() {
                     <Sparkle />
                 </Button>
             </div>
+            <CreditLimitDialog openAlertDialog={openAlertDialog} setOpenAlertDialog={setOpenAlertDialog} />
         </div>
     );
 }
