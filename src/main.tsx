@@ -9,6 +9,7 @@ import { UserDetailContext } from '../context/UserDetailContext.tsx'
 import Outline from './workspace/project/outline/index.tsx'
 import Editor from './workspace/project/editor/index.tsx'
 import Pricing from './workspace/pricing/index.tsx'
+import { ThemeProvider } from './components/theme-provider.tsx'
 
 const router = createBrowserRouter([
   { path: '/', element: <App />, },
@@ -25,11 +26,13 @@ const router = createBrowserRouter([
 function Root() {
   const [userDetail, setUserDetail] = useState();
   return (
-    <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-      <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
-        <RouterProvider router={router} />
-      </UserDetailContext.Provider>
-    </ClerkProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+        <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
+          <RouterProvider router={router} />
+        </UserDetailContext.Provider>
+      </ClerkProvider>
+    </ThemeProvider>
   )
 }
 

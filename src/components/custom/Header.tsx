@@ -1,43 +1,55 @@
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/icon.png";
 import { Button } from "../ui/button";
-import { useUser, SignInButton, UserButton, useAuth } from "@clerk/react";
-import { useLocation } from "react-router-dom";
-import { UserDetailContext } from "../../../context/UserDetailContext";
-import { useContext } from "react";
-import { Gem } from "lucide-react";
+import { useUser, SignInButton, UserButton } from "@clerk/react";
+import { ModeToggle } from "../mode-toggle";
 
 function Header() {
     const { isSignedIn } = useUser();
-    const location = useLocation();
-    const { userDetail } = useContext(UserDetailContext);
-    const { has } = useAuth();
-    const hasProAccess = has({ plan: 'innovator_pro_' });
-    const hasEliteAccess = has({ plan: 'visionary_elite_' });
-    return (
-        <div className="flex justify-between items-center w-full px-6 py-3">
-            <img src={logo} alt="logo" width={150} height={150} />
-            <SignInButton mode="modal">
-                <button className="cursor-pointer bg-white text-black">{isSignedIn ? <div className="flex items-center gap-2 "><UserButton />
-                    {location.pathname === '/workspace' ?
-                        // Inside Return
-                        <Link to="/workspace/pricing">
-                            <div className={`flex items-center gap-2 border rounded-full px-3 py-1 text-sm font-medium transition-all ${hasProAccess || hasEliteAccess ? 'border-blue-400 bg-blue-50' : 'border-gray-200'}`}>
-                                <Gem className="h-4 w-4 text-blue-500" />
-                                <span>
-                                    {hasEliteAccess ? 'Unlimited' : (userDetail?.credits ?? 0)} Credits
-                                </span>
-                                {hasProAccess && <span className="ml-1 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded-full uppercase">Pro</span>}
-                                {hasEliteAccess && <span className="ml-1 bg-purple-600 text-white text-[10px] px-1.5 py-0.5 rounded-full uppercase">Elite</span>}
-                            </div>
-                        </Link>
-                        :
-                        <Link to="/workspace"><Button>Go to Workspace</Button></Link>
 
-                    }
-                </div> : 'Get Started'}</button>
-            </SignInButton>
-        </div>
+    return (
+        <header className="fixed top-0 z-50 w-full bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
+            <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
+                <div className="flex items-center">
+                    <Link to="/" className="flex items-center space-x-2 shrink-0">
+                        <div className="h-8 w-8 rounded-lg flex items-center justify-center">
+                            <img src={logo} alt="logo" className="h-8 w-8" />
+                        </div>
+                        <span className="hidden font-bold sm:inline-block">AI PPT Gen</span>
+                    </Link>
+                </div>
+
+                <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+                    <Link to="/" className="transition-colors hover:text-foreground">Home</Link>
+                    <Link to="/#features" className="transition-colors hover:text-foreground">Features</Link>
+                    <Link to="/workspace/pricing" className="transition-colors hover:text-foreground">Pricing</Link>
+                    <Link to="/#docs" className="transition-colors hover:text-foreground">Docs</Link>
+                </nav>
+
+                <div className="flex items-center gap-4">
+                    <div className="hidden sm:block">
+                        <ModeToggle />
+                    </div>
+                    {isSignedIn ? (
+                        <div className="flex items-center gap-4">
+                            <Link to="/workspace">
+                                <Button variant="ghost" size="sm" className="hover:bg-white/5">Workspace</Button>
+                            </Link>
+                            <UserButton />
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-3">
+                            <SignInButton mode="modal">
+                                <Button variant="ghost" size="sm" className="hidden sm:inline-flex hover:bg-white/5">Sign in</Button>
+                            </SignInButton>
+                            <SignInButton mode="modal">
+                                <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white rounded-md px-5">Get started</Button>
+                            </SignInButton>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </header>
     );
 }
 
