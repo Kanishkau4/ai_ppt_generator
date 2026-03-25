@@ -9,7 +9,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "../ui/alert-dialog"
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type CreditLimitDialogProps = {
     openAlertDialog: boolean;
@@ -17,6 +17,7 @@ type CreditLimitDialogProps = {
 }
 
 function CreditLimitDialog({ openAlertDialog, setOpenAlertDialog }: CreditLimitDialogProps) {
+    const navigate = useNavigate();
     return (
         <AlertDialog open={openAlertDialog} onOpenChange={setOpenAlertDialog}>
             <AlertDialogContent>
@@ -28,7 +29,7 @@ function CreditLimitDialog({ openAlertDialog, setOpenAlertDialog }: CreditLimitD
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => { <Link to="/workspace/pricing">Upgrade</Link> }}>Upgrade</AlertDialogAction>
+                    <AlertDialogAction onClick={() => navigate('/workspace/pricing')}>Upgrade</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

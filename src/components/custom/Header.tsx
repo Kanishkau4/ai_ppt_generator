@@ -12,20 +12,8 @@ function Header() {
     const location = useLocation();
     const { userDetail } = useContext(UserDetailContext);
     const { has } = useAuth();
-    const hasProAccess = has({ plan: 'innovator_pro_' })
-    console.log(hasProAccess);
-    const hasEliteAccess = has({ plan: 'visionary_elite_' })
-    console.log(hasEliteAccess);
-
-    // Deduct 1 credit ONLY if NOT elite
-    if (!hasEliteAccess && userDetail && userDetail.credits > 0) {
-        const updatedCredits = userDetail.credits - 1;
-        console.log("Updated credits:", updatedCredits);
-    } else if (hasEliteAccess) {
-        console.log("No credit deduction for Elite user");
-    }
-
-    console.log(location);
+    const hasProAccess = has({ plan: 'innovator_pro_' });
+    const hasEliteAccess = has({ plan: 'visionary_elite_' });
     return (
         <div className="flex justify-between items-center w-full px-6 py-3">
             <img src={logo} alt="logo" width={150} height={150} />

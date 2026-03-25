@@ -105,9 +105,7 @@ function Outline() {
     const [selectedStyle, setSelectedStyle] = useState<designStyle>();
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const { has } = useAuth();
-    const hasActiveSubscription = has({
-        permission: "subscription.active",
-    });
+    const hasEliteAccess = has({ plan: 'visionary_elite_' });
 
     useEffect(() => {
         getProjectDetails();
@@ -164,17 +162,20 @@ function Outline() {
             merge: true
         });
 
-        // Deduct 1 credit
-        if (userDetail && userDetail.credits > 0 && !hasActiveSubscription) {
-            const updatedCredits = userDetail.credits - 1;
-            const userRef = doc(firestoreDB, "users", userDetail.email);
-            // Save to Firebase
-            await setDoc(userRef, { credits: updatedCredits }, { merge: true });
-            // Update Context to reflect locally on Header
-            hasActiveSubscription && setUserDetail((prev: any) => ({ ...prev, credits: updatedCredits }));
-        }
-        else {
-            setOpenAlertDialog(true);
+        // Check credits & Deduct
+        if (!hasEliteAccess) {
+            if (userDetail && userDetail.credits > 0) {
+                // Deduct 1 credit
+                const updatedCredits = userDetail.credits - 1;
+                const userRef = doc(firestoreDB, "users", userDetail.email);
+                await setDoc(userRef, { credits: updatedCredits }, { merge: true });
+                setUserDetail((prev: any) => ({ ...prev, credits: updatedCredits }));
+            } else {
+                // Out of credits! Block navigation and show dialog
+                setUpdateDbLoading(false);
+                setOpenAlertDialog(true);
+                return;
+            }
         }
 
         setUpdateDbLoading(false);
