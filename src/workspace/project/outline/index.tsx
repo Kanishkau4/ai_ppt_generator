@@ -185,9 +185,17 @@ function Outline() {
     }
 
     return (
-        <div>
-            <div className="flex flex-col items-center justify-center w-full px-6 py-3 bg-white mt-28 space-y-4 ">
-                <h2 className="text-3xl font-bold">Settings and Presentation Outline</h2>
+        <div className="min-h-screen bg-background relative overflow-hidden">
+            {/* Purple Radial Glow */}
+            <div
+                className="absolute inset-0 z-0 pointer-events-none dark:opacity-100 opacity-40"
+                style={{ backgroundImage: `radial-gradient(circle 600px at 50% 0px, rgba(139,92,246,0.2), transparent)` }}
+            />
+            <div className="relative z-10 max-w-4xl mx-auto px-6 pt-24 pb-32 space-y-8">
+                <div className="text-center space-y-2">
+                    <h2 className="text-3xl font-extrabold tracking-tight">Settings & Presentation Outline</h2>
+                    <p className="text-muted-foreground">Customize the design and review your slide outline before generating.</p>
+                </div>
                 <SlidesStyles selectStyle={(value: designStyle) => setSelectedStyle(value)} />
                 <OutlineSection
                     loading={loading}
@@ -195,11 +203,18 @@ function Outline() {
                     handleUpdate={(slideNo: string, slidePoint: string, outlineText: string) => handleUpdate(slideNo, { slideNo, slidePoint, outline: outlineText })}
                 />
             </div>
-            <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center w-full px-6 py-3 bg-white mt-8 space-y-4">
-                <Button size={"lg"} onClick={onGenerateSlides} disabled={updateDbLoading || loading}>
-                    {updateDbLoading && <Loader2 className="animate-spin" />}
+
+            {/* Fixed bottom bar */}
+            <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center px-6 py-4 border-t border-border bg-background/80 backdrop-blur-lg">
+                <Button
+                    size="lg"
+                    onClick={onGenerateSlides}
+                    disabled={updateDbLoading || loading}
+                    className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-10 shadow-[0_0_20px_rgba(147,51,234,0.3)]"
+                >
+                    {updateDbLoading && <Loader2 className="animate-spin mr-2" />}
                     Generate Slides
-                    <Sparkle />
+                    <Sparkle className="ml-2 h-4 w-4" />
                 </Button>
             </div>
             <CreditLimitDialog openAlertDialog={openAlertDialog} setOpenAlertDialog={setOpenAlertDialog} />

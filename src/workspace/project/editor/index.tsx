@@ -6,7 +6,7 @@ import type { ProjectDetails } from "../outline";
 import OutlineSection from "../../../components/custom/OutlineSection";
 import SlidesFrame from "../../../components/custom/SlidesFrame";
 import { Button } from "@/components/ui/button";
-import { FileDown, Loader2 } from "lucide-react";
+import { FileDown, Loader2, Sparkles } from "lucide-react";
 import * as htmlToImage from "html-to-image";
 import PptxGenJS from "pptxgenjs";
 
@@ -99,6 +99,8 @@ function Editor() {
     const [slides, setSlides] = useState<{ code: string }[]>([{ code: DUMMY_SLIDE }]);
     const containerRef = useRef<HTMLDivElement>(null);
     const [downloadLoading, setDownloadLoading] = useState(false);
+    // Track generation progress: { current: index being generated, total: total slides }
+    const [genProgress, setGenProgress] = useState<{ current: number; total: number } | null>(null);
 
     useEffect(() => {
         getProjectDetails();
@@ -130,11 +132,17 @@ function Editor() {
     const generateSlides = async () => {
         if (!projectDetails?.outline || projectDetails.outline.length === 0) return;
 
+        const total = projectDetails.outline.length;
         console.log("🚀 Starting slide generation...");
 
-        const generated: { code: string }[] = [];
+        // Initialize all slots as empty placeholders
+        setSlides(Array.from({ length: total }, () => ({ code: "" })));
+        setGenProgress({ current: 0, total });
 
-        for (let index = 0; index < (projectDetails?.outline?.length ?? 0); index++) {
+        const generated: { code: string }[] = Array(total).fill({ code: "" });
+
+        for (let index = 0; index < total; index++) {
+            setGenProgress({ current: index, total });
             const metaData = projectDetails.outline[index];
             const prompt = SLIDE_PROMPT
                 .replace("{DESIGN_STYLE}", projectDetails?.designStyle?.designGuide ?? "")
@@ -156,6 +164,7 @@ function Editor() {
         }
 
         console.log("🎉 All slides generated!");
+        setGenProgress(null);
         await saveAllSlidesData(generated);
     };
 
@@ -244,9 +253,10 @@ function Editor() {
     };
 
     return (
-        <div className="grid grid-cols-5" style={{ height: 'calc(100vh - 64px)' }}>
+        <div className="grid grid-cols-5 bg-background" style={{ height: 'calc(100vh - 64px)' }}>
             {/* Outline Sidebar */}
-            <div className="col-span-2 h-full overflow-y-auto border-r bg-gray-50">
+            <div className="col-span-2 h-full overflow-y-auto border-r border-border bg-card/30 px-4 py-6">
+                <h2 className="text-base font-semibold text-muted-foreground uppercase tracking-widest mb-4 px-1">Slide Outline</h2>
                 <OutlineSection
                     loading={loading}
                     outline={projectDetails?.outline ?? []}
@@ -257,32 +267,93 @@ function Editor() {
             </div>
 
             {/* Slides Area */}
-            <div className="col-span-3 h-full overflow-y-auto overflow-x-auto p-8" ref={containerRef}>
+            <div className="col-span-3 h-full overflow-y-auto overflow-x-auto p-8 bg-background" ref={containerRef}>
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-xl font-bold">Presentation Slides</h2>
-                    <Button onClick={exportAllIframesToPPT} disabled={downloadLoading}>
+                    <h2 className="text-xl font-bold tracking-tight">Presentation Slides</h2>
+                    <Button
+                        onClick={exportAllIframesToPPT}
+                        disabled={downloadLoading}
+                        className="bg-purple-600 hover:bg-purple-700 text-white rounded-full px-6"
+                    >
                         {downloadLoading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <FileDown className="mr-2 h-4 w-4" />}
                         Export PPT
                     </Button>
                 </div>
 
                 {loading && (
-                    <div className="flex items-center justify-center h-64">
-                        <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
-                        <span className="ml-2 text-gray-500">Loading project...</span>
+                    <div className="flex flex-col items-center justify-center h-64 gap-3">
+                        <Loader2 className="animate-spin h-8 w-8 text-purple-500" />
+                        <span className="text-muted-foreground text-sm">Loading project...</span>
                     </div>
                 )}
 
-                {!loading && slides?.map((slide, index) => (
-                    <SlidesFrame
-                        key={index}
-                        slide={slide}
-                        colors={projectDetails?.designStyle?.colors}
-                        setUpdateSlider={(updateSlideCode: string) => {
-                            updateSlide(updateSlideCode, index);
-                        }}
-                    />
-                ))}
+                {/* Generation progress banner */}
+                {genProgress && (
+                    <div className="mb-6 flex items-center gap-3 rounded-xl border border-purple-500/30 bg-purple-500/10 px-5 py-3">
+                        <Sparkles className="h-5 w-5 text-purple-400 animate-pulse" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-purple-300">
+                                Generating slide {genProgress.current + 1} of {genProgress.total}...
+                            </p>
+                            <div className="mt-1.5 h-1.5 w-full rounded-full bg-purple-900/50">
+                                <div
+                                    className="h-full rounded-full bg-purple-500 transition-all duration-700"
+                                    style={{ width: `${((genProgress.current) / genProgress.total) * 100}%` }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {!loading && slides?.map((slide, index) => {
+                    const isActiveSlot = genProgress !== null && index === genProgress.current;
+
+                    if (slide.code) {
+                        return (
+                            <SlidesFrame
+                                key={index}
+                                slide={slide}
+                                colors={projectDetails?.designStyle?.colors}
+                                setUpdateSlider={(updateSlideCode: string) => {
+                                    updateSlide(updateSlideCode, index);
+                                }}
+                            />
+                        );
+                    }
+
+                    // Skeleton placeholder while this slot is being generated
+                    return (
+                        <div key={index} className="mb-5 relative w-[800px] h-[500px] rounded-2xl overflow-hidden border border-border bg-card">
+                            {/* Shimmer overlay */}
+                            <div className="absolute inset-0 z-10"
+                                style={{
+                                    background: 'linear-gradient(90deg, transparent 0%, rgba(147,51,234,0.08) 50%, transparent 100%)',
+                                    backgroundSize: '200% 100%',
+                                    animation: 'shimmer 1.6s infinite'
+                                }}
+                            />
+                            {isActiveSlot && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-20">
+                                    <div className="flex items-center gap-2 rounded-full bg-purple-600/20 border border-purple-500/30 px-4 py-2">
+                                        <Sparkles className="h-4 w-4 text-purple-400 animate-pulse" />
+                                        <span className="text-sm font-medium text-purple-300">Generating slide {index + 1}...</span>
+                                    </div>
+                                </div>
+                            )}
+                            {/* Inner skeleton lines */}
+                            <div className="p-10 flex flex-col gap-4 opacity-20">
+                                <div className="h-8 w-2/3 rounded-lg bg-muted animate-pulse" />
+                                <div className="h-4 w-full rounded-lg bg-muted animate-pulse" />
+                                <div className="h-4 w-5/6 rounded-lg bg-muted animate-pulse" />
+                                <div className="h-4 w-3/4 rounded-lg bg-muted animate-pulse" />
+                                <div className="mt-6 grid grid-cols-2 gap-4">
+                                    <div className="h-32 rounded-xl bg-muted animate-pulse" />
+                                    <div className="h-32 rounded-xl bg-muted animate-pulse" />
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

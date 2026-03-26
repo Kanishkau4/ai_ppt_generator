@@ -119,10 +119,12 @@ function SlidesFrame({ slide, colors, setUpdateSlider }: Props) {
                 // Calculate position for FloatingActionTool (using viewport coords for fixed positioning)
                 const rect = target.getBoundingClientRect();
                 const iframeRect = iframe.getBoundingClientRect();
-                const x = iframeRect.left + rect.left + rect.width / 2;
-                const y = iframeRect.top + rect.bottom + 8;
+                const rawX = iframeRect.left + rect.left + rect.width / 2;
+                const rawY = iframeRect.top + rect.bottom + 8;
+                // Clamp Y so the toolbar doesn't go below the viewport
+                const clampedY = Math.min(rawY, window.innerHeight - 80);
 
-                setCardPosition({ x, y });
+                setCardPosition({ x: rawX, y: clampedY });
                 isToolOpenRef.current = true;
             };
 
@@ -178,8 +180,14 @@ function SlidesFrame({ slide, colors, setUpdateSlider }: Props) {
         const selectedEl = selectedElRef.current;
         const iframe = iframeRef.current;
 
-        if (!selectedEl || !iframe) {
-            console.warn("No element selected for AI edit");
+        if (!selectedEl) {
+            console.warn("[AI Edit] No element selected — please click an element in the slide first.");
+            setLoading(false);
+            setCardPosition(null);
+            return;
+        }
+        if (!iframe) {
+            console.warn("[AI Edit] Iframe ref is missing.");
             setLoading(false);
             setCardPosition(null);
             return;

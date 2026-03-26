@@ -52,14 +52,23 @@ function Workspace() {
         return <Navigate to="/" />;
     }
     return (
-        <div>
-            <Header />
-            {location.pathname == '/workspace' &&
-                <div>
-                    <PromptBox />
-                    <MyProjects />
-                </div>}
-            <Outlet />
+        <div className="min-h-screen w-full bg-background relative flex flex-col pt-16 mt-0">
+            {/* Purple Radial Glow Background at lowest z-index so content doesn't need z-10 */}
+            <div
+                className="absolute inset-0 -z-10 pointer-events-none dark:opacity-100 opacity-50"
+                style={{
+                    backgroundImage: `radial-gradient(circle 800px at 50% 0px, rgba(139,92,246,0.25), transparent)`,
+                }}
+            />
+            <div className="flex flex-col flex-grow w-full">
+                <Header />
+                {location.pathname == '/workspace' &&
+                    <div className="pt-[64px]">
+                        <PromptBox />
+                        <MyProjects />
+                    </div>}
+                <Outlet />
+            </div>
         </div>
     );
 }

@@ -205,6 +205,11 @@
     from { transform: translateX(0); }
     to { transform: translateX(calc(-50% - 2rem)); }
   }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
 }
 
 @layer base {

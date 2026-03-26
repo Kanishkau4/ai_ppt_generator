@@ -1,11 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/icon.png";
 import { Button } from "../ui/button";
 import { useUser, SignInButton, UserButton } from "@clerk/react";
 import { ModeToggle } from "../mode-toggle";
+import { useContext } from "react";
+import { UserDetailContext } from "../../../context/UserDetailContext";
+import { Gem } from "lucide-react";
 
 function Header() {
     const { isSignedIn } = useUser();
+    const location = useLocation();
+    const { userDetail } = useContext(UserDetailContext) as any;
 
     return (
         <header className="fixed top-0 z-50 w-full bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
@@ -32,9 +37,15 @@ function Header() {
                     </div>
                     {isSignedIn ? (
                         <div className="flex items-center gap-4">
-                            <Link to="/workspace">
-                                <Button variant="ghost" size="sm" className="hover:bg-white/5">Workspace</Button>
-                            </Link>
+                            {location.pathname.includes('/workspace') ? (
+                                <Button variant="secondary" size="sm" className="pointer-events-none cursor-default">
+                                    <Gem className="h-4 w-4" /> {userDetail?.credits || 0} Credits
+                                </Button>
+                            ) : (
+                                <Link to="/workspace">
+                                    <Button variant="ghost" size="sm" className="hover:bg-white/5">Workspace</Button>
+                                </Link>
+                            )}
                             <UserButton />
                         </div>
                     ) : (
