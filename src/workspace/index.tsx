@@ -30,7 +30,7 @@ function Workspace() {
                         fullName: user?.fullName,
                         email: user.primaryEmailAddress.emailAddress,
                         createdAt: Date.now(),
-                        credits: 5,
+                        credits: 4,
                     }
                     // Insert new user
                     console.log("Inserting new user...");

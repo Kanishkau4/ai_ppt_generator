@@ -3,44 +3,51 @@ import { Button } from "../ui/button"
 
 const plans = [
   {
-    name: "Basic Plan",
-    price: "$29",
+    name: "Free",
+    price: "$0",
+    description: "Get a taste of AI-powered design with just enough power to start.",
+    billingTag: "Always free",
     features: [
-      "5 Projects",
-      "10 GB Storage",
-      "Basic Support",
-      "Community Access",
-      "Basic Code Review",
+      "4 AI Projects",
+      "Standard Slide Layouts",
+      "Basic AI Export",
+      "Community Support",
     ],
     buttonText: "Get Started",
     popular: false,
   },
   {
-    name: "Pro Plan",
-    price: "$79",
+    name: "Innovator (Pro)",
+    price: "$19.99",
+    description: "Perfect for creators and business professionals who need quick, stunning decks.",
+    billingTag: "/mo",
+    subTag: "Only billed monthly",
     features: [
-      "50 Projects",
-      "100 GB Storage",
+      "Unlimited AI Projects",
+      "Premium Slide Layouts",
+      "High-Resolution Exports",
       "Priority Support",
-      "Team Collaboration",
-      "Advanced Analytics",
-      "Premium Code Review",
+      "Custom Brand Assets",
+      "No Watermark",
     ],
     buttonText: "Upgrade Now",
     popular: true,
   },
   {
-    name: "Enterprise Plan",
-    price: "$149",
+    name: "Visionary (Elite)",
+    price: "$59.99",
+    description: "For those who build at scale. High-volume generation and premium assets.",
+    billingTag: "/mo",
+    subTag: "Only billed monthly",
     features: [
-      "Unlimited Projects",
-      "1 TB Storage",
-      "24/7 Dedicated Support",
-      "Custom Integrations",
-      "SLA Guarantee",
-      "White-label Branding",
+      "All Pro Features",
+      "Advanced AI Stylization",
+      "Custom Font Libraries",
+      "Team Collaboration",
+      "Early Access to Features",
+      "Dedicated Account Manager",
     ],
-    buttonText: "Contact Sales",
+    buttonText: "Go Elite",
     popular: false,
   },
 ]
@@ -63,25 +70,35 @@ export default function PricingPlans() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
-            <div 
-              key={index} 
-              className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-300 transform hover:scale-105 ${
-                plan.popular 
-                ? "bg-purple-600 text-white shadow-2xl border-purple-500 -mt-4 mb-4 ring-4 ring-purple-600/20" 
-                : "bg-card hover:bg-accent/50 hover:shadow-xl"
-              }`}
+            <div
+              key={index}
+              className={`relative flex flex-col p-8 rounded-3xl border transition-all duration-300 transform hover:scale-105 ${plan.popular
+                  ? "bg-purple-600 text-white shadow-2xl border-purple-500 -mt-4 mb-4 ring-4 ring-purple-600/20"
+                  : "bg-card hover:bg-accent/50 hover:shadow-xl"
+                }`}
             >
               {plan.popular && (
                 <div className="absolute top-0 right-8 -translate-y-1/2 bg-white text-purple-600 px-4 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
                   <Sparkles className="h-3 w-3" /> Most Popular
                 </div>
               )}
-              
-              <div className="mb-8">
+
+              <div className="mb-8 flex-grow">
                 <h3 className={`text-xl font-bold ${plan.popular ? "text-white" : "text-card-foreground"}`}>{plan.name}</h3>
-                <div className="mt-4 flex items-baseline gap-1 mt-2">
-                  <span className={`text-4xl font-extrabold ${plan.popular ? "text-white" : "text-card-foreground"}`}>{plan.price}</span>
-                  <span className={plan.popular ? "text-purple-100" : "text-muted-foreground"}>/mo</span>
+                <p className={`text-sm mt-2 leading-relaxed min-h-[40px] ${plan.popular ? "text-purple-50" : "text-muted-foreground"}`}>{plan.description}</p>
+
+                <div className="mt-6 flex flex-col gap-0.5">
+                  <div className="flex items-baseline gap-1">
+                    <span className={`text-4xl font-extrabold ${plan.popular ? "text-white" : "text-card-foreground"}`}>{plan.price}</span>
+                    <span className={`text-sm font-medium ${plan.popular ? "text-purple-100" : "text-muted-foreground"}`}>
+                      {plan.billingTag}
+                    </span>
+                  </div>
+                  {plan.subTag && (
+                    <span className={`text-[10px] font-bold uppercase tracking-wider ${plan.popular ? "text-purple-200/80" : "text-muted-foreground/60"}`}>
+                      {plan.subTag}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -94,12 +111,11 @@ export default function PricingPlans() {
                 ))}
               </div>
 
-              <Button 
-                className={`w-full h-12 rounded-xl font-bold transition-all ${
-                  plan.popular 
-                  ? "bg-white text-purple-600 hover:bg-purple-50 hover:scale-[1.02]" 
-                  : "bg-purple-600 text-white hover:bg-purple-700 hover:scale-[1.02]"
-                }`}
+              <Button
+                className={`w-full h-12 rounded-xl font-bold transition-all ${plan.popular
+                    ? "bg-white text-purple-600 hover:bg-purple-50 hover:scale-[1.02]"
+                    : "bg-purple-600 text-white hover:bg-purple-700 hover:scale-[1.02]"
+                  }`}
               >
                 {plan.buttonText}
               </Button>
