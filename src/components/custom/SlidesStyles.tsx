@@ -131,15 +131,15 @@ function SlidesStyles({ selectStyle }: props) {
     const [selectedStyle, setSelectedStyle] = useState<string>("");
     return (
         <div>
-            <div className="flex flex-col items-center justify-center w-full px-6 py-3 bg-white mt-8 space-y-4 ">
+            <div className="flex flex-col items-center justify-center w-full px-6 py-3 mt-8 space-y-4 ">
                 <h2 className="text-2xl font-semibold">Select Slides Styles</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {SLIDE_STYLES.map((style, index) => (
-                    <div key={index} className={`bg-white rounded-lg shadow-md p-4 cursor-pointer hover:scale-105 transition-all duration-300 ${selectedStyle === style.styleName ? "border-2 border-blue-500" : ""}`}
+                    <div key={index} className={`rounded-lg shadow-md p-4 cursor-pointer hover:scale-105 transition-all duration-300 ${selectedStyle === style.styleName ? "border-2 border-purple-500" : ""}`}
                         onClick={() => { setSelectedStyle(style.styleName); selectStyle(style) }}
                     >
-                        <img src={style.bannerImage} alt={style.styleName} className="w-full h-38 object-cover rounded-lg mb-4 hover:scale-105 transition-all duration-300" />
+                        <img src={style.bannerImage} alt={style.styleName} className="w-full h-32 object-cover rounded-lg mb-4 hover:scale-105 transition-all duration-300" />
                         <h3 className="text-sm font-bold mb-2">{style.styleName}</h3>
                     </div>
                 ))}
