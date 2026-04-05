@@ -1,6 +1,5 @@
-import React from "react";
 import { Skeleton } from "../ui/skeleton";
-import { Edit, Sparkle } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Button } from "../ui/button";
 import EditOutlineDialog from "./EditOutlineDialog";
 
@@ -15,7 +14,7 @@ function OutlineSection({ loading, outline, handleUpdate }: { loading: boolean, 
         <div className="flex flex-col w-full space-y-4">
             {loading &&
                 <div className="space-y-4">
-                    {[1, 2, 3, 4, 5].map((item, index) => (
+                    {[1, 2, 3, 4, 5].map((_, index) => (
                         <Skeleton key={index} className="w-full h-[80px] rounded-xl" />
                     ))}
                 </div>

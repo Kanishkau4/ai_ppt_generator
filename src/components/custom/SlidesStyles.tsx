@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ProfessionalBlue from "../../assets/ProfessionalBlue.png";
 import MinimalWhite from "../../assets/MinimalWhite.png";
 import ModernGradient from "../../assets/ModernGradient.png";

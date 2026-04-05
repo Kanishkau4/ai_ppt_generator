@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { useUser } from "@clerk/react";
 import { firestoreDB } from "../../config/FirebaseConfig";
-import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { UserDetailContext } from "../../context/UserDetailContext";
 import Header from "../components/custom/Header";
 import PromptBox from "../components/custom/PromptBox";
@@ -10,7 +10,7 @@ import MyProjects from "../components/custom/MyProjects";
 
 function Workspace() {
     const { isLoaded, isSignedIn, user } = useUser();
-    const { userDetail, setUserDetail } = useContext(UserDetailContext);
+    const { setUserDetail } = useContext(UserDetailContext);
     const location = useLocation();
 
     useEffect(() => {

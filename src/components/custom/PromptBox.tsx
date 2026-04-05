@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea } from "../ui/input-group";
-import { ArrowRight, Loader2Icon, PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupTextarea } from "../ui/input-group";
+import { ArrowRight, Loader2Icon } from "lucide-react";
 import {
     Select,
     SelectContent,
