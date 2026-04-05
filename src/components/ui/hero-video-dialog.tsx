@@ -91,9 +91,9 @@ export function HeroVideoDialog({
           className="w-full rounded-md border shadow-lg transition-all duration-200 ease-out group-hover:brightness-[0.8]"
         />
         <div className="absolute inset-0 flex scale-[0.9] items-center justify-center rounded-2xl transition-all duration-200 ease-out group-hover:scale-100">
-          <div className="bg-primary/10 flex size-28 items-center justify-center rounded-full backdrop-blur-md">
+          <div className="bg-purple-500/10 flex size-28 items-center justify-center rounded-full backdrop-blur-md">
             <div
-              className={`from-primary/30 to-primary relative flex size-20 scale-100 items-center justify-center rounded-full bg-linear-to-b shadow-md transition-all duration-200 ease-out group-hover:scale-[1.2]`}
+              className={`from-purple-500/30 to-purple-500 relative flex size-20 scale-100 items-center justify-center rounded-full bg-linear-to-b shadow-md transition-all duration-200 ease-out group-hover:scale-[1.2]`}
             >
               <Play
                 className="size-8 scale-100 fill-white text-white transition-transform duration-200 ease-out group-hover:scale-105"
@@ -131,13 +131,24 @@ export function HeroVideoDialog({
                 <XIcon className="size-5" />
               </motion.button>
               <div className="relative isolate z-1 size-full overflow-hidden rounded-2xl border-2 border-white">
-                <iframe
-                  src={videoSrc}
-                  title="Hero Video player"
-                  className="mt-0 size-full rounded-2xl"
-                  allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                ></iframe>
+                {videoSrc.includes("youtube.com") || videoSrc.includes("youtu.be") || videoSrc.includes("vimeo.com") ? (
+                  <iframe
+                    src={videoSrc}
+                    title="Hero Video player"
+                    className="mt-0 size-full rounded-2xl"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  ></iframe>
+                ) : (
+                  <video
+                    src={videoSrc}
+                    className="size-full rounded-2xl"
+                    controls
+                    autoPlay
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                )}
               </div>
             </motion.div>
           </motion.div>

@@ -3,6 +3,9 @@ import { Button } from "../ui/button";
 import { HeroVideoDialog } from "../ui/hero-video-dialog";
 import { useUser, SignInButton } from "@clerk/react";
 import { Link } from "react-router-dom";
+import heroVideo from "@/assets/Hero Video.mp4";
+import heroThumbnailLight from "@/assets/hero-thumbnail-light.png";
+import heroThumbnailDark from "@/assets/hero-thumbnail-dark.png";
 
 function Hero() {
     const { isSignedIn } = useUser();
@@ -54,16 +57,16 @@ function Hero() {
                     <HeroVideoDialog
                         className="block dark:hidden"
                         animationStyle="top-in-bottom-out"
-                        videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-                        thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-                        thumbnailAlt="Hero Video"
+                        videoSrc={heroVideo}
+                        thumbnailSrc={heroThumbnailLight}
+                        thumbnailAlt="Hero Video Light"
                     />
                     <HeroVideoDialog
                         className="hidden dark:block"
                         animationStyle="top-in-bottom-out"
-                        videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-                        thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
-                        thumbnailAlt="Hero Video"
+                        videoSrc={heroVideo}
+                        thumbnailSrc={heroThumbnailDark}
+                        thumbnailAlt="Hero Video Dark"
                     />
                 </div>
 

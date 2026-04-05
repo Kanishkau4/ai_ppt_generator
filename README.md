@@ -48,7 +48,7 @@ Creating presentations is often a tedious process of balancing content creation 
 ## 📸 Demo & Screenshots
 
 <p align="center">
-  <img src="ai_ppt_editor_mockup_1774510067965.png" alt="AI PPT Editor Mockup" width="90%" style="border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 30px rgba(0,0,0,0.3);" />
+  <img src="src/assets/ai_ppt_editor_mockup.png" alt="AI PPT Editor Mockup" width="90%" style="border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 30px rgba(0,0,0,0.3);" />
 </p>
 
 <p align="center">
